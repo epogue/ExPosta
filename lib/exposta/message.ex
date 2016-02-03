@@ -33,17 +33,12 @@ defimpl Poison.Encoder, for: ExPosta.Message do
   alias Poison.Encoder
   alias ExPosta.Message
 
-  # There must be a built-in function to do just this...
-  defp concat([]), do: ""
-  defp concat([head|[]]), do: head
-  defp concat([head|tail]), do: head <> "," <> concat(tail)
-
   def encode(msg=%Message{}, options) do
     Encoder.encode(%{
       "From"        => msg.from,
-      "To"          => concat(msg.to),
-      "Cc"          => concat(msg.cc),
-      "Bcc"         => concat(msg.bcc),
+      "To"          => Enum.join(msg.to, ","),
+      "Cc"          => Enum.join(msg.cc, ","),
+      "Bcc"         => Enum.join(msg.bcc, ","),
       "Subject"     => msg.subject,
       "Tag"         => msg.tag,
       "HtmlBody"    => msg.html,
